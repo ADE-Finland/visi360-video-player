@@ -1,0 +1,584 @@
+﻿<krpano version="1.20.9" title="Virtual Tour">
+
+	<plugin name="pp_blur" keep="true"
+		url="%VIEWER%/plugins/pp_blur.js"
+		enabled="true"
+		range="0.0"
+		linearrgb="false"
+		zorder="8"
+		phase="2"
+	/>
+
+	<action name="startup" autorun="onstart">
+		if(startscene === null OR !scene[get(startscene)], copy(startscene,scene[0].name); );
+		loadscene(get(startscene), null, MERGE);
+		if(startactions !== null, startactions() );
+		js(krpanoReady());
+	</action>
+
+	<style name="questionsheettext" 
+		type="text" 
+		enabled="false" 
+		bold="true" 
+		align="center" 
+		css="font-size:2vh; color:#000000; font-family:Arial;" 
+		bg="false"
+	/>
+
+	<style name="answerbutton" 
+		type="text" 
+		align="top" 
+		width="100%" 
+		height="45" 
+		bgcolor="0xBCBCBC"
+		bgroundedge="5"
+		handcursor="true"
+		css="font-size:2vh; color:#000000; font-family:Arial;" 
+		onover="set(bgcolor, 0x5C5C5C);" 
+		onout="set(bgcolor, 0xBCBCBC);"
+	/>
+
+	<style name="menubutton"
+		css="font-size:20px;color:#000000;text-align:center;padding:12px;"
+		css.mobile="font-size:12px;color:#000000;text-align:center;padding:6px;"
+		bgroundedge="5"
+		bgborder="1 0x000000 1"
+		bgcolor="0xEBEBEB"  
+		width="170" height="50" 
+		width.mobile="100" height.mobile="30" 
+		onover="set(bgcolor, 0xE5E5E5);"
+		onout="set(bgcolor, 0xEBEBEB);"
+	/>
+
+	<style name="hs_tool_info"
+		onover="tween(layer[mouse_hover_text_info].alpha, 1); asyncloop(hovering, mouse_link_info(get(html)));"
+		onout="tween(layer[mouse_hover_text_info].alpha, 0);"
+	/>
+
+	<layer name="mouse_hover_text_info" type="text" keep="true"
+		html="mouse follow"
+		css="color:#000000; font-size:24px; font-weight:bold; text-align:center; padding: 5px;"
+		zorder="10"
+		bgroundedge="20"
+		bgcolor="0x65C7D0"
+		alpha="0"
+		enabled="false"
+	/>
+
+	<action name="mouse_link_info">
+		set(layer[mouse_hover_text_info].html, %1);
+		add(mousex, get(mouse.x), 10);
+		add(mousey, get(mouse.y), -20);
+		set(layer[mouse_hover_text_info].x, get(mousex));
+		set(layer[mouse_hover_text_info].y, get(mousey));
+	</action>
+
+	<style name="hs_tool_question"
+		onover="tween(layer[mouse_hover_text_question].alpha, 1); asyncloop(hovering, mouse_link_question(get(html)));"
+		onout="tween(layer[mouse_hover_text_question].alpha, 0);"
+	/>
+
+	<layer name="mouse_hover_text_question" type="text" keep="true"
+		html="mouse follow"
+		css="color:#FFFFFF; font-size:24px; font-weight:bold; text-align:center; padding: 5px;"
+		zorder="10"
+		bgroundedge="20"
+		bgcolor="0x2E903B"
+		alpha="0"
+		enabled="false"
+	/>
+
+	<action name="mouse_link_question">
+		set(layer[mouse_hover_text_question].html, %1);
+		add(mousex, get(mouse.x), 10);
+		add(mousey, get(mouse.y), -20);
+		set(layer[mouse_hover_text_question].x, get(mousex));
+		set(layer[mouse_hover_text_question].y, get(mousey));
+	</action>
+
+	<style name="hs_tool_move"
+		onover="tween(layer[mouse_hover_text_move].alpha, 1); asyncloop(hovering, mouse_link_move(get(html)));"
+		onout="tween(layer[mouse_hover_text_move].alpha, 0);"
+	/>
+
+	<layer name="mouse_hover_text_move" type="text" keep="true"
+		html="mouse follow"
+		css="color:#FFFFFF; font-size:24px; font-weight:bold; text-align:center; padding: 5px;"
+		zorder="10"
+		bgroundedge="20"
+		bgcolor="0xC72DDB"
+		alpha="0"
+		enabled="false"
+	/>
+
+	<action name="mouse_link_move">
+		set(layer[mouse_hover_text_move].html, %1);
+		add(mousex, get(mouse.x), 10);
+		add(mousey, get(mouse.y), -20);
+		set(layer[mouse_hover_text_move].x, get(mousex));
+		set(layer[mouse_hover_text_move].y, get(mousey));
+	</action>
+
+	<style name="hs_tool_default"
+		onover="tween(layer[mouse_hover_text_default].alpha, 1); asyncloop(hovering, mouse_link_default(get(html)));"
+		onout="tween(layer[mouse_hover_text_default].alpha, 0);"
+	/>
+
+	<action name="mouse_link_default">
+		set(layer[mouse_hover_text_default].html, %1);
+		add(mousex, get(mouse.x), 10);
+		add(mousey, get(mouse.y), -20);
+		set(layer[mouse_hover_text_default].x, get(mousex));
+		set(layer[mouse_hover_text_default].y, get(mousey));
+	</action>
+
+	<layer name="mouse_hover_text_default" type="text" keep="true"
+			html="mouse follow"
+			css="color:#FFFFFF; font-size:24px; font-weight:bold; text-align:center; padding: 5px;"
+			zorder="10"
+			bgroundedge="20"
+			bgcolor="0x363636"
+			alpha="0"
+			enabled="false"
+	/>
+
+	<style name="sb_info"
+		css="color:#000000; font-size:24px; font-weight:bold; text-align:center; padding: 10px;"
+		zorder="9"
+		bgroundedge="20"
+		bgcolor="0x65C7D0"
+	/>
+
+	<style name="sb_question"
+		css="color:#FFFFFF; font-size:24px; font-weight:bold; text-align:center; padding: 10px;"
+		zorder="9"
+		bgroundedge="20"
+		bgcolor="0x2E903B"
+	/>
+
+	<style name="sb_move"
+		css="color:#FFFFFF; font-size:24px; font-weight:bold; text-align:center; padding: 10px;"
+		zorder="9"
+		bgroundedge="20"
+		bgcolor="0xC72DDB"
+	/>
+
+	<style name="sb_default"
+		css="color:#FFFFFF; font-size:24px; font-weight:bold; text-align:center; padding: 10px;"
+		zorder="9"
+		bgroundedge="20"
+		bgcolor="0x363636"
+	/>
+	
+	<events onresize="calculateScreenSizeValues(); calculateWindowSizeValues();"/>
+
+	<scene name="scene_start" title="scene_start" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/blank.tiles/thumb.jpg" lat="" lng="" heading="">
+		
+		<preview type="grid(cube,32,32,512,0xCCCCCC,0xFFFFFF,0x999999);" />
+
+		<layer name="button_start_simulation" type="text" style="menubutton"
+			html="start simulation" 
+			align="leftbottom" x="20" y="20" 
+			onclick="startSimulation();"
+		/>
+
+		<layer name="button_toggle_play" type="text" style="menubutton"
+				enabled="false" visible="false" visible.mobile="false" keep="true"
+				html="toggle play" 
+				align="leftbottom" x="20" y="90" 
+				onclick="plugin[video].togglepause();"
+		/>
+
+		<layer name="layer_video_time" type="text" style="menubutton"
+				enabled="false" visible="false" visible.mobile="false" keep="true"
+				html="video time" 
+				align="leftbottom" x="20" y="160" 
+		/>
+
+		<layer name="layer_video_time_percent" type="text" style="menubutton"
+				enabled="false" visible="false" visible.mobile="false" keep="true"
+				html="video time %" 
+				align="leftbottom" x="20" y="230" 
+		/>
+
+		<layer name="layer_scene_time" type="text" style="menubutton"
+				enabled="false" visible="false" visible.mobile="false" keep="true"
+				html="scene time" 
+				align="leftbottom" x="20" y="300" 
+		/>
+
+	</scene>
+
+	<scene name="scene_end" title="scene_end" onstart="" havevrimage.mobilevr="false" havevrimage.no-mobilevr="true" thumburl="panos/blank.tiles/thumb.jpg" lat="" lng="" heading="">
+		
+		<preview type="grid(cube,32,32,512,0x000000,0x000000,0x000000);" />
+
+		<control usercontrol="off"/> 
+
+		<layer name="result_sheet" visible="true" enabled="false" type="text" keep="false" handcursor="false" bgcolor="0xFFFFFF" bgroundedge="5" bgborder="1 0x000000 1" align="center" width="90%" height="90%" scalechildren="false" zorder="10">
+			<layer name="result_title" type="text" style="questionsheettext" align="top" y="5%" html="SIMULATION FINISHED"/>
+
+			<layer name="result_text" type="text" style="questionsheettext" align="top" y="15%" html="Results"/>
+
+		</layer>
+
+	</scene>
+
+	<action name="newVideoScene" scope="local">
+		txtadd(sceneName, 'scene', %1);
+		set(scene[2].name, get(sceneName));
+		set(scene[2].content, 			
+			<plugin name="video"
+					url.html5="%VIEWER%/plugins/videoplayer.js"
+					url.flash="%VIEWER%/plugins/videoplayer.swf"
+					videoUrl="%2"
+					starttime="%5"
+					endtime="%6"
+					endtimeseconds=""
+					panovideo="true"
+					pausedonstart="false"
+					loop="false"
+					volume="1"
+					timepercent = "0"
+					onvideoready="seek(get(starttime)); play();"
+					onerror="set(layer[error_layer].visible, true);"
+					onvideoplay="set(layer[load_layer].visible, false); js(startTimer()); stopdelayedcall('videoPaused')"
+					onvideopaused=" delayedcall('videoPaused', 2, js(videoPaused()));"
+			/>
+
+			<image>
+				<sphere url="plugin:video" />
+			</image>
+
+			<view hlookat="0" vlookat="0" fovtype="DFOV" fov="100" fovmin="75" fovmax="150" distortion="0.0" />
+
+			<layer name="pause_layer" type="text"
+				style="sb_default"
+				enabled="false" visible="false"
+				zorder="2"
+				html="Video paused[br]Press this to play" 
+				align="center" x="20" y="-60" 
+				onclick="plugin[video].play(); set(enabled, false); set(visible, false);"
+			/>
+
+			<layer name="load_layer" type="text"
+				enabled="false" handcursor="false"
+				width="100%" height="100%" 
+				bgcolor="0x000000"
+			/>
+				<layer name="load_text" type="text"
+				parent="layer[load_layer]"
+				html="Please wait, the scene is loading..." 
+				css="font-size:3vh;color:#FFFFFF;text-align:center;padding:12px;" 
+				align="center"
+				width="90%" height="auto"
+				bgcolor="0x000000"
+				>
+			</layer>
+
+			<layer name="error_layer" type="text"
+				enabled="false" handcursor="false" visible="false"
+				html="something went wrong, please reload" 
+				css="font-size:20px;color:#FFFFFF;text-align:center;padding:12px;" 
+				align="center"
+				width="100%" height="100%" 
+				bgcolor="0x000000"
+			/>
+		);
+
+		loadscene(get(sceneName));
+		set(global.control.usercontrol, all);
+		lookat(%3, %4, 100);
+		js(createHotspots());
+		callwhen(plugin[video].isvideoready, 
+			mul(endTimeSeconds, plugin[video].endtime, plugin[video].totaltime);
+			set(plugin[video].endtimeseconds, get(endTimeSeconds));
+			callwhen(plugin[video].time GE plugin[video].endtimeseconds,
+				js(videoEnded(%1));
+			);
+		);
+
+		<!-- renderloop(set(layer[layer_video_time].html, get(plugin[video].time));); -->
+		renderloop(setCurrentTime());
+	</action>
+
+	<action name="endSimulation">
+		loadscene(scene_end);
+		set(layer[button_toggle_play].visible, false);
+		set(layer[button_toggle_play].enabled, false);
+		set(layer[layer_video_time].visible, false);
+		set(layer[layer_video_time].enabled, false);
+		set(layer[layer_video_time_percent].visible, false);
+		set(layer[layer_video_time_percent].enabled, false);
+		set(layer[layer_scene_time].visible, false);
+		set(layer[layer_scene_time].enabled, false);
+		set(layer[result_text].html, %1);
+	</action>
+
+	<action name="setCurrentTime">
+		set(layer[layer_video_time].html, get(plugin[video].time));
+		div(timepercent, get(plugin[video].time), get(plugin[video].totaltime));
+		roundval(timepercent, 3);
+		set(plugin[video].timepercent, get(timepercent));
+		set(layer[layer_video_time_percent].html, get(plugin[video].timepercent));
+	</action>
+
+	<action name="startSimulation">
+		js(startSimulation());
+	</action>
+
+	<action name="createHotspot">
+		txtadd(hotspotName, 'hotspot', %1);
+		addhotspot(get(hotspotName));
+		assignstyle(hotspot[get(hotspotName)], %6);
+		set(hotspot[get(hotspotName)].url, %5);
+		set(hotspot[get(hotspotName)].ath, %2);
+		set(hotspot[get(hotspotName)].atv, %3);
+		set(hotspot[get(hotspotName)].scale, 0.5);
+		set(hotspot[get(hotspotName)].zoom, true);
+		set(hotspot[get(hotspotName)].onclick, js(getNodeData(%4)); );
+		set(hotspot[get(hotspotName)].visible, false);
+		set(hotspot[get(hotspotName)].enabled, false);
+		set(hotspot[get(hotspotName)].html, %7);
+	</action>
+
+	<action name="createScreenButton">
+		txtadd(layerName, 'screenButton', %1);
+		addlayer(get(layerName));
+		set(layer[get(layerName)].type , text);
+		layer[get(layerName)].loadstyle(%5);
+		set(layer[get(layerName)].align , bottomright);
+		set(layer[get(layerName)].width, auto);
+		if(device.mobile,
+			mul(yCoordinate, 40, %2);
+			add(yCoordinate, 10);
+			set(layer[get(layerName)].x , 10);
+			,
+			mul(yCoordinate, 70, %2);
+			add(yCoordinate, 20);
+			set(layer[get(layerName)].x , 20);
+		);
+		set(layer[get(layerName)].y , get(yCoordinate));
+		set(layer[get(layerName)].html , %3);
+		set(layer[get(layerName)].onclick, js(getNodeData(%4)); );
+		set(layer[get(layerName)].visible , false);
+		set(layer[get(layerName)].enabled , false);
+	</action>
+
+	<action name="toggleAnswer">
+		if(layer[%1].selected == false,
+			js(changeAnswer(%2, 0));
+			set(layer[%1].selected, true);
+			set(layer[%1].onout, 'set(bgcolor, 0x707070);');
+			set(layer[%1].bgcolor, 0x707070);
+			,
+			js(changeAnswer(%2, 1));
+			set(layer[%1].selected, false);
+			set(layer[%1].onout, 'set(bgcolor, 0xBCBCBC);');
+			set(layer[%1].bgcolor, 0xBCBCBC);
+		);	
+	</action>
+
+	<!-- *******************************************SCREEN SIZE*******************************************************
+	******************************************************************************************************************
+	************************************************************************************************************** -->
+
+	<screensizes>
+		<size name="width" value="0"/>
+		<size name="height" value="0"/>
+	</screensizes>
+
+	<action name="calculateScreenSizeValues">
+		set(screensizes.size[height].value, get(stageheight));
+		set(screensizes.size[width].value, get(stagewidth));
+	</action>
+
+	<!-- ******************************************SCREEN SIZE 2******************************************************
+	******************************************************************************************************************
+	************************************************************************************************************** -->
+
+	<windowsizes>
+		<size name="info" height="0" width="0"/>
+		<size name="popup" height="0" width="0"/>
+		<size name="rot_bg" height="0" width="0"/>
+	</windowsizes>
+
+	<action name="calculateWindowSizeValues">
+		if(get(stagewidth) GE 850, 
+			set(global.layer[popup].width, 850);
+			set(windowsizes.size[popup].width, 850);
+			,
+			set(global.layer[popup].width, get(stagewidth));
+			set(windowsizes.size[popup].width, get(stagewidth));
+		);
+		if((get(stageheight) GE 800) AND (get(stagewidth) GE 850), 
+			set(global.layer[popup].height, get(popupheight));
+			set(windowsizes.size[popup].height, get(popupheight));
+			,
+			set(global.layer[popup].height, get(popupheight));
+			set(windowsizes.size[popup].height, get(popupheight));
+		);
+	</action>
+
+	<!-- *********************************************POPUPS**********************************************************
+	******************************************************************************************************************
+	************************************************************************************************************** -->
+
+	<action name="popup" scope="private:POPUP" args="type, content, close, width, height, scrollbars"><![CDATA[
+		if(popup, removelayer(popup) );	
+
+		addlayer('popup_bg', popup_bg);
+		set(popup_bg,
+			type=container,
+			align=lefttop, width=100%, height=100%,
+			zorder=99,
+			handcursor=false,
+			bgcapture=true,
+			capture=false,
+			//bgcolor=0x123456, onloaded='tween(bgalpha,0.3,1.0);',	// optional: colorize the background
+			// ondown='popup_close()'
+		);
+				
+		addlayer('popup', popup);
+		set(popup,
+			type=container,
+			parent='popup_bg',
+			width=90%,
+			height=90%,
+			align=center,
+			//bgborder='1 0x555555 1',
+			bgcolor=0xFFFFFF,
+			bgalpha=0,
+			//bgshadow='0 10 20 0x000000 0.5',
+			bgcapture=true,
+			//bgroundedge=25,
+			maskchildren=false,
+			capture=true,
+			handcursor=false,
+			alpha=0
+		);
+		
+		
+		
+		if(close,
+			addlayer('popup_close_x', closex);
+			set(closex,
+				url='%CURRENTXML%/sprites/icon_close2.png',
+				parent='popup',
+				align=righttop,
+				x=18,
+				y=18,
+				edge=topright,
+				scale=0.10,
+				zorder=99,
+				alpha=0.25,
+				onover='tween(alpha,1)',
+				onout='tween(alpha,0.25)',
+				ondown='tween(alpha,1)',
+				onup='tween(alpha,0.25)',
+				onclick='popup_close()'
+			);
+		);
+		
+
+		if(type == 'html',
+			copy(popup.datacontent, content);
+			calc(popup.onloaded, 'add_html_code(get(datacontent),'+scrollbars+');');
+
+		  ,type == 'iframe',
+			calc(popup.datacontent, '<iframe style="position:absolute;width:100%;height:100%;top:0px;left:0px;" src="'+content+'" frameborder="0" allowfullscreen></iframe>');
+			calc(popup.onloaded, 'add_html_code(get(datacontent),'+scrollbars+');');
+
+		  ,type == 'image',
+		 	set(popup,
+		 		bgcolor=0xFFFFFF,
+		 		bgalpha=1,
+		 	);
+			addlayer("popup_image", img);
+			set(img,
+				url=get(content),
+				align=center,
+				width=-20, height=-20,
+				parent=get(popup.name),
+				onloaded='popup_imageloaded()'
+			);
+		);
+
+		tween(global.plugin[pp_blur].range, 40.0);
+		delayedcall(0.2, tween(global.layer[popup].alpha, 1.0); );
+
+		//set(global.events[popup].onclick, popup_close() );
+		set(global.events[popup].onremovepano, popup_close() );
+		set(global.control.usercontrol, off);
+	]]></action>
+	
+	
+	<action name="popup_close">
+		set(global.plugin[popup_bg].enabled, false);
+		set(global.events[popup].name, null);
+		tween(global.plugin[pp_blur].range, 0.0);
+		tween(global.layer[popup_bg].bgalpha, 0.0, 0.25);
+		tween(global.layer[popup].alpha, 0.0, 0.25, default,
+			removelayer('popup_bg', true);
+			scope(private:POPUP, delete(popup); );
+		);
+		js(unPauseVideo());
+		js(startTimer());
+		js(showScreenButtons());
+		set(global.control.usercontrol, all);
+	</action>
+
+
+	<action name="popup_imageloaded" scope="private:POPUP">
+		calc(imgw, caller.imagewidth + 20);
+		calc(imgh, caller.imageheight + 20);
+		calc(maxw, global.stagewidth*0.9);
+		calc(maxh, global.stageheight*0.8);
+		if(imgw GT maxw,
+			calc(imgh, round(imgh * maxw / imgw));
+			copy(imgw, maxw);
+		);
+		if(imgh GT maxh,
+			calc(imgw, round(imgw * maxh / imgh));
+			copy(imgh, maxh);
+		);
+
+		set(global.layer[get(caller.parent)], width=get(imgw), height=get(imgh) );
+	</action>
+
+	<!-- arguments: 1=htmlcode, 2=scrollbars -->
+	<action name="add_html_code" type="Javascript"><![CDATA[
+		var div = document.createElement("div");
+		div.id = "popup-background";
+
+		var div2 = document.createElement("div");
+		div2.id = "popup-content";
+
+		var div3 = document.createElement("div");
+		div3.id = "popup-title";
+
+		function stopPropagation(e){ e.stopPropagation(); }
+		function preventDefault(e){ e.preventDefault(); }
+
+		// enable browsed-based mouse-wheel and touch-scrolling support:
+		div.addEventListener("wheel", stopPropagation, true);
+		div.addEventListener("mousewheel", stopPropagation, true);
+		div.addEventListener("DOMMouseScroll", stopPropagation, true);
+		div.addEventListener("touchstart", function(event){ if(krpano.device.ios && window.innerHeight == krpano.display.htmltarget.offsetHeight){ /* avoid the iOS 'overscrolling' for fullpage viewers */ var bs = document.body.parentNode.style; bs.position="fixed"; bs.top=0; bs.left=0; bs.right=0; bs.bottom=0; } krpano.control.preventTouchEvents = false; event.stopPropagation(); }, true);
+		div.addEventListener("touchend", function(event){ krpano.control.preventTouchEvents = true; event.stopPropagation(); }, true);
+		div.addEventListener("gesturestart", preventDefault, true);
+
+		// add the html code:
+		//div.innerHTML = args[1];
+
+		// add the div to the layer element:
+		caller.sprite.appendChild(div);
+
+		div.appendChild(div3);
+		div.appendChild(div2);
+
+		div3.innerHTML = getInfoContent();
+		div2.innerHTML = getHtmlContent();
+	]]></action>
+
+</krpano>
