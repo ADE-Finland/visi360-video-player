@@ -10,11 +10,11 @@ Required krpano plugins (can be found on krpano website):
 File system (files marked with * are not included in this repository):  
 Root  
 -css  
---*plugins  
---sprites  
---*tours  
----*folders with tour name  
-----*all tour materials (videos, images etc.)  
+-*plugins  
+-sprites  
+-*tours  
+--*folders with tour name  
+---*all tour materials (videos, images etc.)  
 -index.html  
 -*tour.js  
 -*tour.swf  
