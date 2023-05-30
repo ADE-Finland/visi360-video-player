@@ -51,8 +51,17 @@
 	/>
 
 	<style name="hs_tool_info"
-		onover="tween(layer[mouse_hover_text_info].alpha, 1); asyncloop(hovering, mouse_link_info(get(html)));"
-		onout="tween(layer[mouse_hover_text_info].alpha, 0);"
+		onover="tween(alpha,0.5); tween(layer[mouse_hover_text_info].alpha, 1); asyncloop(hovering, mouse_link_info(get(html)));"
+		onout="tween(alpha,1); tween(layer[mouse_hover_text_info].alpha, 0);"
+	/>
+
+	<style name="hs_tool_info_polyspot"
+		capture="false"
+		borderwidth="0"
+		alpha="1"
+		fillcolor="0xFFFFFF"
+		onover="tween(alpha,0.5); tween(layer[mouse_hover_text_info].alpha, 1); asyncloop(hovering, mouse_link_info(get(html)));"
+		onout="tween(alpha,1); tween(layer[mouse_hover_text_info].alpha, 0);"
 	/>
 
 	<layer name="mouse_hover_text_info" type="text" keep="true"
@@ -74,8 +83,17 @@
 	</action>
 
 	<style name="hs_tool_question"
-		onover="tween(layer[mouse_hover_text_question].alpha, 1); asyncloop(hovering, mouse_link_question(get(html)));"
-		onout="tween(layer[mouse_hover_text_question].alpha, 0);"
+		onover="tween(alpha,0.5); tween(layer[mouse_hover_text_question].alpha, 1); asyncloop(hovering, mouse_link_question(get(html)));"
+		onout="tween(alpha,1); tween(layer[mouse_hover_text_question].alpha, 0);"
+	/>
+
+	<style name="hs_tool_question_polyspot"
+		capture="false"
+		borderwidth="0"
+		alpha="1"
+		fillcolor="0xFFFFFF"
+		onover="tween(alpha,0.5); tween(layer[mouse_hover_text_question].alpha, 1); asyncloop(hovering, mouse_link_question(get(html)));"
+		onout="tween(alpha,1); tween(layer[mouse_hover_text_question].alpha, 0);"
 	/>
 
 	<layer name="mouse_hover_text_question" type="text" keep="true"
@@ -97,8 +115,17 @@
 	</action>
 
 	<style name="hs_tool_move"
-		onover="tween(layer[mouse_hover_text_move].alpha, 1); asyncloop(hovering, mouse_link_move(get(html)));"
-		onout="tween(layer[mouse_hover_text_move].alpha, 0);"
+		onover="tween(alpha,0.5); tween(layer[mouse_hover_text_move].alpha, 1); asyncloop(hovering, mouse_link_move(get(html)));"
+		onout="tween(alpha,1); tween(layer[mouse_hover_text_move].alpha, 0);"
+	/>
+
+	<style name="hs_tool_move_polyspot"
+		capture="false"
+		borderwidth="0"
+		alpha="1"
+		fillcolor="0xFFFFFF"
+		onover="tween(alpha,0.5); tween(layer[mouse_hover_text_move].alpha, 1); asyncloop(hovering, mouse_link_move(get(html)));"
+		onout="tween(alpha,1); tween(layer[mouse_hover_text_move].alpha, 0);"
 	/>
 
 	<layer name="mouse_hover_text_move" type="text" keep="true"
@@ -120,8 +147,17 @@
 	</action>
 
 	<style name="hs_tool_default"
-		onover="tween(layer[mouse_hover_text_default].alpha, 1); asyncloop(hovering, mouse_link_default(get(html)));"
-		onout="tween(layer[mouse_hover_text_default].alpha, 0);"
+		onover="tween(alpha,0.5); tween(layer[mouse_hover_text_default].alpha, 1); asyncloop(hovering, mouse_link_default(get(html)));"
+		onout="tween(alpha,1); tween(layer[mouse_hover_text_default].alpha, 0);"
+	/>
+
+	<style name="hs_tool_default_polyspot"
+		capture="false"
+		borderwidth="0"
+		alpha="1"
+		fillcolor="0xFFFFFF"
+		onover="tween(alpha,0.5); tween(layer[mouse_hover_text_default].alpha, 1); asyncloop(hovering, mouse_link_default(get(html)));"
+		onout="tween(alpha,1); tween(layer[mouse_hover_text_default].alpha, 0);"
 	/>
 
 	<action name="mouse_link_default">
@@ -144,30 +180,59 @@
 
 	<style name="sb_info"
 		css="color:#000000; font-size:24px; font-weight:bold; text-align:center; padding: 10px;"
+		css.mobile="color:#000000; font-size:16px; font-weight:bold; text-align:center; padding: 6px;"
 		zorder="9"
 		bgroundedge="20"
 		bgcolor="0x65C7D0"
+		onover="tween(x, 40);"
+		onout="tween(x, 20);"
+		onover.mobile="tween(x, 30);"
+		onout.mobile="tween(x, 10);"
 	/>
 
 	<style name="sb_question"
 		css="color:#FFFFFF; font-size:24px; font-weight:bold; text-align:center; padding: 10px;"
+		css.mobile="color:#FFFFFF; font-size:16px; font-weight:bold; text-align:center; padding: 6px;"
 		zorder="9"
 		bgroundedge="20"
 		bgcolor="0x2E903B"
+		onover="tween(x, 40);"
+		onout="tween(x, 20);"
+		onover.mobile="tween(x, 30);"
+		onout.mobile="tween(x, 10);"
 	/>
 
 	<style name="sb_move"
 		css="color:#FFFFFF; font-size:24px; font-weight:bold; text-align:center; padding: 10px;"
+		css.mobile="color:#FFFFFF; font-size:16px; font-weight:bold; text-align:center; padding: 6px;"
 		zorder="9"
 		bgroundedge="20"
 		bgcolor="0xC72DDB"
+		onover="tween(x, 40);"
+		onout="tween(x, 20);"
+		onover.mobile="tween(x, 30);"
+		onout.mobile="tween(x, 10);"
 	/>
 
 	<style name="sb_default"
 		css="color:#FFFFFF; font-size:24px; font-weight:bold; text-align:center; padding: 10px;"
+		css.mobile="color:#FFFFFF; font-size:16px; font-weight:bold; text-align:center; padding: 6px;"
 		zorder="9"
 		bgroundedge="20"
 		bgcolor="0x363636"
+		onover="tween(x, 40);"
+		onout="tween(x, 20);"
+		onover.mobile="tween(x, 30);"
+		onout.mobile="tween(x, 10);"
+	/>
+
+	<style name="polyspot"
+		capture="false"
+		borderwidth="0"
+		alpha="1"
+		onover="tween(alpha,0.5);"
+		onout="tween(alpha,1);"
+		fillcolor="0xFFFFFF"
 	/>
 	
 	<events onresize="calculateScreenSizeValues(); calculateWindowSizeValues();"/>
@@ -242,8 +307,8 @@
 					timepercent = "0"
 					onvideoready="seek(get(starttime)); play();"
 					onerror="set(layer[error_layer].visible, true);"
-					onvideoplay="set(layer[load_layer].visible, false); js(startTimer()); stopdelayedcall('videoPaused')"
-					onvideopaused=" delayedcall('videoPaused', 2, js(videoPaused()));"
+					onvideoplay="set(layer[load_layer].visible, false); js(startTimer());"
+					onvideopaused="js(videoPaused());"
 			/>
 
 			<image>
@@ -253,12 +318,12 @@
 			<view hlookat="0" vlookat="0" fovtype="DFOV" fov="100" fovmin="75" fovmax="150" distortion="0.0" />
 
 			<layer name="pause_layer" type="text"
-				style="sb_default"
-				enabled="false" visible="false"
-				zorder="2"
-				html="Video paused[br]Press this to play" 
-				align="center" x="20" y="-60" 
-				onclick="plugin[video].play(); set(enabled, false); set(visible, false);"
+					style="sb_default"
+					enabled="false" visible="false"
+					zorder="2"
+					html="Video paused[br]Press this to play" 
+					align="center" x="20" y="-60" 
+					onclick="plugin[video].play(); set(enabled, false); set(visible, false);"
 			/>
 
 			<layer name="load_layer" type="text"
@@ -284,6 +349,26 @@
 				width="100%" height="100%" 
 				bgcolor="0x000000"
 			/>
+
+			<!-- <hotspot name="lava1" keep="true" style="polyspot">
+				<point ath="102" atv="9"/>
+				<point ath="100" atv="0"/>
+				<point ath="82" atv="0"/>
+				<point ath="84" atv="8"/>
+			</hotspot> -->
+
+			<!-- <hotspot name="lava1" keep="true" style="polyspot" points="102,9,100,0,82,0,84,8"/> -->
+
+			<!-- <hotspot name="lava2" keep="true" style="polyspot">
+				<point ath="159.292" atv="-13.173"/>
+				<point ath="155.785" atv="-23.723"/>
+				<point ath="156.947" atv="-35.371"/>
+				<point ath="174.684" atv="-34.857"/>
+				<point ath="174.699" atv="-23.694"/>
+				<point ath="-169.755" atv="-21.832"/>
+				<point ath="-169.609" atv="-18.929"/>
+				<point ath="-178.737" atv="-12.487"/>
+			</hotspot> -->
 		);
 
 		loadscene(get(sceneName));
@@ -298,6 +383,8 @@
 			);
 		);
 
+		<!-- createTestSpot(); -->
+		mobile_popup();
 		<!-- renderloop(set(layer[layer_video_time].html, get(plugin[video].time));); -->
 		renderloop(setCurrentTime());
 	</action>
@@ -340,6 +427,66 @@
 		set(hotspot[get(hotspotName)].visible, false);
 		set(hotspot[get(hotspotName)].enabled, false);
 		set(hotspot[get(hotspotName)].html, %7);
+	</action>
+
+	<action name="createFloorHotspot">
+		txtadd(hotspotName, 'hotspot', %1);
+		addhotspot(get(hotspotName));
+		assignstyle(hotspot[get(hotspotName)], %6);
+		set(hotspot[get(hotspotName)].url, %5);
+		set(hotspot[get(hotspotName)].ath, %2);
+		set(hotspot[get(hotspotName)].atv, %3);
+		set(hotspot[get(hotspotName)].scale, 0.5);
+		set(hotspot[get(hotspotName)].zoom, true);
+		set(hotspot[get(hotspotName)].onclick, js(getNodeData(%4)); );
+		set(hotspot[get(hotspotName)].visible, false);
+		set(hotspot[get(hotspotName)].enabled, false);
+		set(hotspot[get(hotspotName)].html, %7);
+		set(hotspot[get(hotspotName)].distorted, true);
+		set(hotspot[get(hotspotName)].rx, %8);
+	</action>
+
+	<action name="createPolyHotspot">
+		txtadd(hotspotName, 'hotspot', %1);
+		addhotspot(get(hotspotName));
+		assignstyle(hotspot[get(hotspotName)], %3);
+		set(hotspot[get(hotspotName)].zoom, true);
+		set(hotspot[get(hotspotName)].onclick, js(getNodeData(%2)); );
+		set(hotspot[get(hotspotName)].visible, false);
+		set(hotspot[get(hotspotName)].enabled, false);
+		set(hotspot[get(hotspotName)].html, %4);
+
+		set(hotspot[get(hotspotName)].point[0].ath, %5);
+		set(hotspot[get(hotspotName)].point[0].atv, %6);
+
+		set(hotspot[get(hotspotName)].point[1].ath, %7);
+		set(hotspot[get(hotspotName)].point[1].atv, %8);
+
+		set(hotspot[get(hotspotName)].point[2].ath, %9);
+		set(hotspot[get(hotspotName)].point[2].atv, %10);
+
+		set(hotspot[get(hotspotName)].point[3].ath, %11);
+		set(hotspot[get(hotspotName)].point[3].atv, %12);
+	</action>
+
+	<action name="createTestSpot">
+		js(print(1));
+		txtadd(hotspotName, 'lava', '10');
+		addhotspot(get(hotspotName));
+		assignstyle(hotspot[get(hotspotName)], 'polyspot');
+
+		js(print(2));
+		set(hotspot[get(hotspotName)].point[0].ath, 102);
+		set(hotspot[get(hotspotName)].point[0].atv, 9);
+
+		js(print(3));
+		set(hotspot[get(hotspotName)].point[1].ath, 100);
+		set(hotspot[get(hotspotName)].point[1].atv, 0);
+
+		js(print(4));
+		set(hotspot[get(hotspotName)].point[2].ath, 82);
+		set(hotspot[get(hotspotName)].point[2].atv, 0);
+		
 	</action>
 
 	<action name="createScreenButton">
@@ -430,35 +577,48 @@
 		addlayer('popup_bg', popup_bg);
 		set(popup_bg,
 			type=container,
-			align=lefttop, width=100%, height=100%,
+			align=lefttop, 
+			width=100%, 
+			height=100%,
 			zorder=99,
 			handcursor=false,
 			bgcapture=true,
-			capture=false,
-			//bgcolor=0x123456, onloaded='tween(bgalpha,0.3,1.0);',	// optional: colorize the background
-			// ondown='popup_close()'
+			capture=false
 		);
 				
 		addlayer('popup', popup);
-		set(popup,
-			type=container,
-			parent='popup_bg',
-			width=90%,
-			height=90%,
-			align=center,
-			//bgborder='1 0x555555 1',
-			bgcolor=0xFFFFFF,
-			bgalpha=0,
-			//bgshadow='0 10 20 0x000000 0.5',
-			bgcapture=true,
-			//bgroundedge=25,
-			maskchildren=false,
-			capture=true,
-			handcursor=false,
-			alpha=0
+
+		if(global.device.desktop,
+			set(popup,
+				type=container,
+				parent='popup_bg',
+				width=60%,
+				height=80%,
+				align=center,
+				bgcolor=0xFFFFFF,
+				bgalpha=0,
+				bgcapture=true,
+				maskchildren=false,
+				capture=true,
+				handcursor=false,
+				alpha=0
+			);
+			,
+			set(popup,
+				type=container,
+				parent='popup_bg',
+				width=95%,
+				height=95%,
+				align=center,
+				bgcolor=0xFFFFFF,
+				bgalpha=0,
+				bgcapture=true,
+				maskchildren=false,
+				capture=true,
+				handcursor=false,
+				alpha=0
+			);
 		);
-		
-		
 		
 		if(close,
 			addlayer('popup_close_x', closex);
@@ -522,6 +682,7 @@
 			removelayer('popup_bg', true);
 			scope(private:POPUP, delete(popup); );
 		);
+		js(popUpClosed());
 		js(unPauseVideo());
 		js(startTimer());
 		js(showScreenButtons());
@@ -579,6 +740,43 @@
 
 		div3.innerHTML = getInfoContent();
 		div2.innerHTML = getHtmlContent();
+	]]></action>
+
+	<!-- Fix on info window not working on mobile devices. Makes popup window and deletes it. -->
+	<action name="mobile_popup" scope="private:POPUP"><![CDATA[
+		if(popup, removelayer(popup) );	
+
+		addlayer('popup_bg', popup_bg);
+		set(popup_bg,
+			type=container,
+			align=lefttop, 
+			width=100%, 
+			height=100%,
+			zorder=99,
+			handcursor=false,
+			bgcapture=true,
+			capture=false
+		);
+				
+		addlayer('popup', popup);
+		set(popup,
+			type=container,
+			parent='popup_bg',
+			width=90%,
+			height=90%,
+			align=center,
+			bgcolor=0xFFFFFF,
+			bgalpha=0,
+			bgcapture=true,
+			maskchildren=false,
+			capture=true,
+			handcursor=false,
+			alpha=0
+		);
+
+		removelayer('popup_bg', true);
+		scope(private:POPUP, delete(popup);
+
 	]]></action>
 
 </krpano>

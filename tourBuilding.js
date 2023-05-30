@@ -9,9 +9,11 @@ var answerButtonCount = 0;
 var screenButtonCount = 0;
 var videoHasEnded = false;
 var score = 0;
+var maxScore = 0;
 var videosFound = 0;
 var toolNodeFilesChecked = 0;
 var currentFolderName = "";
+var popUpOpen = false;
 const timerArray = [];
 const actionShowArray = [];
 const actionHideArray = [];
@@ -30,7 +32,7 @@ function getDemoData(){
 
     document.getElementById("loadText").innerHTML = "Using demo data";
 
-    let myRequest = new Request("./tours/Postoperative_care_in_recovery_room_4k/Postoperative_careV8-mp4.json");
+    let myRequest = new Request("./tours/Postoperative_care_in_recovery_room_4k/Postoperative_careV8.json");
 
     fetch(myRequest)
         .then(function(resp){
@@ -96,7 +98,7 @@ function updateVideoCheckStatus(){
 
     if(toolNodeFilesChecked == 2 * jsonList.tools.length && videosFound == jsonList.videos.length){
         document.getElementById("startLabel").style.visibility = "visible";
-        document.getElementById("startDebugLabel").style.visibility = "visible";
+        //document.getElementById("startDebugLabel").style.visibility = "visible";
     }
 };
 
@@ -174,7 +176,7 @@ function updateToolNodeCheckStatus(){
 
     if(toolNodeFilesChecked == 2 * jsonList.tools.length && videosFound == jsonList.videos.length){
         document.getElementById("startLabel").style.visibility = "visible";
-        document.getElementById("startDebugLabel").style.visibility = "visible";
+        //document.getElementById("startDebugLabel").style.visibility = "visible";
     }
 };
 
@@ -185,6 +187,7 @@ function krpanoReady(){
 function startSimulation(){
     document.getElementById("upload").style.display = "none";
     score = 0;
+    maxScore = 0;
     getNodeData(jsonList.startId);
 };
 
@@ -192,6 +195,9 @@ function enableDebugTools(){
     krpano.call("set(layer[layer_video_time].visible, true);");
     krpano.call("set(layer[layer_video_time_percent].visible, true);");
     krpano.call("set(layer[layer_scene_time].visible, true);");
+
+    krpano.call("set(layer[button_toggle_play].visible, true);");
+    krpano.call("set(layer[button_toggle_play].enabled, true);");
 }
 
 function print(s){
@@ -260,6 +266,8 @@ function videoPaused(){
 
     pauseTimer();
 
+    if(popUpOpen) return;
+
     krpano.call("set(layer[pause_layer].enabled, true);");
     krpano.call("set(layer[pause_layer].visible, true);");
 };
@@ -290,44 +298,89 @@ function createHotspots(){
              var timerActionCall = "js(getNodeData(" + jsonList.videos[currentVideoNode].actions[i].nextNode + "));";
              createNewTimer(jsonList.videos[currentVideoNode].actions[i].timer, timerActionCall);
         }
-        else{
+        else if(jsonList.videos[currentVideoNode].actions[i].actionType == 0){
             if(jsonList.videos[currentVideoNode].actions[i].autoEnd == true){
                 autoEndNextNodeId = jsonList.videos[currentVideoNode].actions[i].nextNode;
             }
             else{
-                if(jsonList.videos[currentVideoNode].actions[i].worldPosition.x == 0 && jsonList.videos[currentVideoNode].actions[i].worldPosition.y == 0 && jsonList.videos[currentVideoNode].actions[i].worldPosition.z == 0){
-                    var layerCreationCall = 'createScreenButton(' + currentVideoNode + i + ', ' + screenButtonCount + ', ' + 
-                    jsonList.videos[currentVideoNode].actions[i].actionText + ', ' + jsonList.videos[currentVideoNode].actions[i].nextNode + 
-                    ', "' + getScreenButtonStyle(jsonList.videos[currentVideoNode].actions[i].nextNode) + '")';
-                    krpano.call(layerCreationCall);
-                    screenButtons.push("screenButton"+currentVideoNode+i);
-                    screenButtonCount++;
+                var layerCreationCall = 'createScreenButton(' + currentVideoNode + i + ', ' + screenButtonCount + ', ' + 
+                jsonList.videos[currentVideoNode].actions[i].actionText + ', ' + jsonList.videos[currentVideoNode].actions[i].nextNode + 
+                ', "' + getScreenButtonStyle(jsonList.videos[currentVideoNode].actions[i].nextNode) + '")';
+                krpano.call(layerCreationCall);
+                screenButtons.push("screenButton"+currentVideoNode+i);
+                screenButtonCount++;
 
-                    var layerCallWhenId1 = "lashow" + currentVideoNode + i;
-                    var layerCallWhenId2 = "lahide" + currentVideoNode + i;
-                    var layerShowCall = "callwhen(" + layerCallWhenId1 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].startTime + ", set(layer[screenButton" + currentVideoNode + i + "].visible, true); set(layer[screenButton" + currentVideoNode + i + "].enabled, true););";
-                    var layerHideCall = "callwhen(" + layerCallWhenId2 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].endTime + ", set(layer[screenButton" + currentVideoNode + i + "].visible, false); set(layer[screenButton" + currentVideoNode + i + "].enabled, false););";
-                    actionShowArray.push(layerShowCall);
-                    actionHideArray.push(layerHideCall);
-                    actionTimeIds.push(layerCallWhenId1);
-                    actionTimeIds.push(layerCallWhenId2);
-                } 
-                else {
-                    var hotspotCreationCall = 'createHotspot(' + currentVideoNode + i + ', ' + getActionAth(i) + ', ' + getActionAtv(i) + ', ' + 
-                    jsonList.videos[currentVideoNode].actions[i].nextNode + ', ' + getActionNodeImage(i) + ', "' + 
-                    getNodeStyle(jsonList.videos[currentVideoNode].actions[i].nextNode) + '", "'+ jsonList.videos[currentVideoNode].actions[i].actionText +'");';
-                    krpano.call(hotspotCreationCall);
-                    
-                    var hotspotCallWhenId1 = "hsshow" + currentVideoNode + i;
-                    var hotspotCallWhenId2 = "hshide" + currentVideoNode + i;
-                    var hotspotShowCall = "callwhen(" + hotspotCallWhenId1 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].startTime + ", set(hotspot[hotspot" + currentVideoNode + i + "].visible, true); set(hotspot[hotspot" + currentVideoNode + i + "].enabled, true););";
-                    var hotspotHideCall = "callwhen(" + hotspotCallWhenId2 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].endTime + ", set(hotspot[hotspot" + currentVideoNode + i + "].visible, false); set(hotspot[hotspot" + currentVideoNode + i + "].enabled, false););";
-                    actionShowArray.push(hotspotShowCall);
-                    actionHideArray.push(hotspotHideCall);
-                    actionTimeIds.push(hotspotCallWhenId1);
-                    actionTimeIds.push(hotspotCallWhenId2);
-                }
+                var layerCallWhenId1 = "lashow" + currentVideoNode + i;
+                var layerCallWhenId2 = "lahide" + currentVideoNode + i;
+                var layerShowCall = "callwhen(" + layerCallWhenId1 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].startTime + ", set(layer[screenButton" + currentVideoNode + i + "].visible, true); set(layer[screenButton" + currentVideoNode + i + "].enabled, true););";
+                var layerHideCall = "callwhen(" + layerCallWhenId2 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].endTime + ", set(layer[screenButton" + currentVideoNode + i + "].visible, false); set(layer[screenButton" + currentVideoNode + i + "].enabled, false););";
+                actionShowArray.push(layerShowCall);
+                actionHideArray.push(layerHideCall);
+                actionTimeIds.push(layerCallWhenId1);
+                actionTimeIds.push(layerCallWhenId2);
             }
+        }
+        else if(jsonList.videos[currentVideoNode].actions[i].actionType == 3){
+            var point0Ath = getPointAth(i, 0);
+            var point0Atv = getPointAtv(i, 0);
+            var point1Ath = getPointAth(i, 1);
+            var point1Atv = getPointAtv(i, 1);
+            var point2Ath = getPointAth(i, 2);
+            var point2Atv = getPointAtv(i, 2);
+            var point3Ath = getPointAth(i, 3);
+            var point3Atv = getPointAtv(i, 3);
+
+            var hotspotCreationCall = 'createPolyHotspot(' + currentVideoNode + i + ', ' + jsonList.videos[currentVideoNode].actions[i].nextNode + ', ' + 
+            '"' + getNodeStyle(jsonList.videos[currentVideoNode].actions[i].nextNode)+'_polyspot' + '", "' + jsonList.videos[currentVideoNode].actions[i].actionText +'", ' + 
+            point0Ath + ', ' + point0Atv +  ', ' + 
+            point1Ath + ', ' + point1Atv +  ', ' + 
+            point2Ath + ', ' + point2Atv +  ', ' + 
+            point3Ath + ', ' + point3Atv +  
+            ');';
+            //console.log(hotspotCreationCall);
+            krpano.call(hotspotCreationCall);
+            
+            var hotspotCallWhenId1 = "hsshow" + currentVideoNode + i;
+            var hotspotCallWhenId2 = "hshide" + currentVideoNode + i;
+            var hotspotShowCall = "callwhen(" + hotspotCallWhenId1 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].startTime + ", set(hotspot[hotspot" + currentVideoNode + i + "].visible, true); set(hotspot[hotspot" + currentVideoNode + i + "].enabled, true););";
+            var hotspotHideCall = "callwhen(" + hotspotCallWhenId2 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].endTime + ", set(hotspot[hotspot" + currentVideoNode + i + "].visible, false); set(hotspot[hotspot" + currentVideoNode + i + "].enabled, false););";
+            actionShowArray.push(hotspotShowCall);
+            actionHideArray.push(hotspotHideCall);
+            actionTimeIds.push(hotspotCallWhenId1);
+            actionTimeIds.push(hotspotCallWhenId2);
+        }
+        else if(jsonList.videos[currentVideoNode].actions[i].actionType == 2){
+            var hotspotCreationCall = 'createFloorHotspot(' + currentVideoNode + i + ', ' + getActionAth(i) + ', ' + getActionAtv(i) + ', ' + 
+            jsonList.videos[currentVideoNode].actions[i].nextNode + ',"sprites/icon_circle.png" , "' + 
+            getNodeStyle(jsonList.videos[currentVideoNode].actions[i].nextNode) + '", "'+ jsonList.videos[currentVideoNode].actions[i].actionText 
+            + '", "'+ (90 - getActionAtv(i)) +'");';
+            krpano.call(hotspotCreationCall);
+
+            //console.log(hotspotCreationCall);
+            
+            var hotspotCallWhenId1 = "hsshow" + currentVideoNode + i;
+            var hotspotCallWhenId2 = "hshide" + currentVideoNode + i;
+            var hotspotShowCall = "callwhen(" + hotspotCallWhenId1 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].startTime + ", set(hotspot[hotspot" + currentVideoNode + i + "].visible, true); set(hotspot[hotspot" + currentVideoNode + i + "].enabled, true););";
+            var hotspotHideCall = "callwhen(" + hotspotCallWhenId2 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].endTime + ", set(hotspot[hotspot" + currentVideoNode + i + "].visible, false); set(hotspot[hotspot" + currentVideoNode + i + "].enabled, false););";
+            actionShowArray.push(hotspotShowCall);
+            actionHideArray.push(hotspotHideCall);
+            actionTimeIds.push(hotspotCallWhenId1);
+            actionTimeIds.push(hotspotCallWhenId2);
+        }
+        else if(jsonList.videos[currentVideoNode].actions[i].actionType == 1){
+            var hotspotCreationCall = 'createHotspot(' + currentVideoNode + i + ', ' + getActionAth(i) + ', ' + getActionAtv(i) + ', ' + 
+            jsonList.videos[currentVideoNode].actions[i].nextNode + ', ' + getActionNodeImage(i) + ', "' + 
+            getNodeStyle(jsonList.videos[currentVideoNode].actions[i].nextNode) + '", "'+ jsonList.videos[currentVideoNode].actions[i].actionText +'");';
+            krpano.call(hotspotCreationCall);
+            
+            var hotspotCallWhenId1 = "hsshow" + currentVideoNode + i;
+            var hotspotCallWhenId2 = "hshide" + currentVideoNode + i;
+            var hotspotShowCall = "callwhen(" + hotspotCallWhenId1 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].startTime + ", set(hotspot[hotspot" + currentVideoNode + i + "].visible, true); set(hotspot[hotspot" + currentVideoNode + i + "].enabled, true););";
+            var hotspotHideCall = "callwhen(" + hotspotCallWhenId2 + ", plugin[video].timepercent GE " + jsonList.videos[currentVideoNode].actions[i].endTime + ", set(hotspot[hotspot" + currentVideoNode + i + "].visible, false); set(hotspot[hotspot" + currentVideoNode + i + "].enabled, false););";
+            actionShowArray.push(hotspotShowCall);
+            actionHideArray.push(hotspotHideCall);
+            actionTimeIds.push(hotspotCallWhenId1);
+            actionTimeIds.push(hotspotCallWhenId2);
         }
     }
 
@@ -469,7 +522,50 @@ function getActionAtv(id){
     return -atv;
 };
 
+function getPointAth(id, point){
+    var ath;
+
+    if(jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].x < 0 && jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].z >= 0){
+        ath = -(180 + (180/Math.PI) * Math.atan(jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].z / jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].x));
+    }
+    else if(jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].x >= 0 && jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].z >= 0){
+        ath = -(180/Math.PI) * Math.atan(jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].z / jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].x);
+    }
+    else if(jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].x < 0 && jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].z < 0){
+        ath = 180 - (180/Math.PI) * Math.atan(jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].z / jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].x);
+    }
+    else if(jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].x >= 0 && jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].z < 0){
+        ath = -(180/Math.PI) * Math.atan(jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].z / jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].x);
+    }
+
+    return ath;
+};
+
+function getPointAtv(id, point){
+
+    var atv;
+
+    atv = (180/Math.PI) * Math.atan(jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].y / Math.sqrt(Math.pow(jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].z, 2) + Math.pow(jsonList.videos[currentVideoNode].actions[id].areaMarkerVertices2[point].x, 2)))
+
+    return -atv;
+};
+
+function popUpClosed(){
+    popUpOpen = false;
+};
+
+function hideHoverTexts(){
+    krpanoCall("set(layer[mouse_hover_text_info].alpha, 0);");
+    krpanoCall("set(layer[mouse_hover_text_question].alpha, 0);");
+    krpanoCall("set(layer[mouse_hover_text_move].alpha, 0);");
+    krpanoCall("set(layer[mouse_hover_text_default].alpha, 0);");
+}
+
 function openQuestionSheet(){
+    popUpOpen = true;
+
+    hideHoverTexts();
+
     if(jsonList.tools[currentToolNode].toolTypeInt == 0){
         var randomNode = jsonList.tools[currentToolNode].nextNodes[Math.floor(Math.random() * jsonList.tools[currentToolNode].nextNodes.length)];
 
@@ -495,6 +591,8 @@ function openQuestionSheet(){
 
     //krpano.call("popup('html', " + popUpContent + ", get(windowsizes.size[popup].width), get(windowsizes.size[popup].height), true);");
     krpano.call("popup('html', " + popUpContent + ", " + closeButtonBool + ");");
+
+    krpanoCall();
 }
 
 function getHtmlContent(){
@@ -596,6 +694,7 @@ function submitAnswers(){
         if(answerArray[i] == 0){
             score += jsonList.tools[currentToolNode].question.answerScores[i];
         }
+        maxScore += jsonList.tools[currentToolNode].question.answerScores[i];
     }
 
     getNodeData(jsonList.tools[currentToolNode].nextNodes[nextNode]);
@@ -616,6 +715,7 @@ function checkAnswers(){
                 nextNode = 1;
             }
         }
+        maxScore += jsonList.tools[currentToolNode].question.answerScores[i];
     }
 
     getNodeData(jsonList.tools[currentToolNode].nextNodes[nextNode]);
@@ -628,7 +728,7 @@ function nodeAfterAnswer(id){
 };
 
 function endSimulation(){
-    var scoreText = "Total score: " + score;
+    var scoreText = "Total score: " + score + " / " + maxScore;
     krpano.call("endSimulation(" + scoreText + ");");
     resetTimer();
     resetTimerArray();
